@@ -82,19 +82,19 @@ fig = go.Figure(go.Indicator(
 
 st.plotly_chart(fig)
 
-        st.subheader("Quality Score")
-        st.metric("Dataset Quality Score", score)
+st.subheader("Quality Score")
+st.metric("Dataset Quality Score", score)
 
-        st.subheader("Issues Detected")
-        st.write(issues)
+st.subheader("Issues Detected")
+st.write(issues)
 
-        st.subheader("Missing Values Heatmap")
+st.subheader("Missing Values Heatmap")
 
-        fig, ax = plt.subplots(figsize=(8,4))
-        sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
-        st.pyplot(fig)
+fig, ax = plt.subplots(figsize=(8,4))
+sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
+st.pyplot(fig)
 
-        recommendations = []
+recommendations = []
 
         if issues["missing_values"]:
             recommendations.append("Handle missing values using imputation.")
