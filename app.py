@@ -62,7 +62,25 @@ if uploaded_files:
 
         issues = detect_issues(df)
 
-        score = calculate_score(issues)
+score = calculate_score(issues)
+
+st.subheader("Dataset Quality Scorecard")
+
+fig = go.Figure(go.Indicator(
+    mode="gauge+number",
+    value=score,
+    title={'text': "Quality Score"},
+    gauge={
+        'axis': {'range': [0,100]},
+        'steps': [
+            {'range': [0,50], 'color': "red"},
+            {'range': [50,75], 'color': "orange"},
+            {'range': [75,100], 'color': "lightgreen"}
+        ]
+    }
+))
+
+st.plotly_chart(fig)
 
         st.subheader("Quality Score")
         st.metric("Dataset Quality Score", score)
