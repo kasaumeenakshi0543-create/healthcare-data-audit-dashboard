@@ -40,11 +40,11 @@ def calculate_score(issues):
 
     score -= len(issues["missing_values"]) * 5
     score -= issues["duplicates"] * 0.5
-    score -= issues.get("age_under_18",0)
-    score -= issues.get("age_over_45",0)
-    score -= issues.get("los_less_2",0)
+    score -= issues.get("age_under_18", 0)
+    score -= issues.get("age_over_45", 0)
+    score -= issues.get("los_less_2", 0)
 
-    return max(score,0)
+    return max(score, 0)
 
 
 results = []
@@ -62,39 +62,40 @@ if uploaded_files:
 
         issues = detect_issues(df)
 
-score = calculate_score(issues)
+        score = calculate_score(issues)
 
-st.subheader("Dataset Quality Scorecard")
+        # Quality Score Gauge
+        st.subheader("Dataset Quality Scorecard")
 
-fig = go.Figure(go.Indicator(
-    mode="gauge+number",
-    value=score,
-    title={'text': "Quality Score"},
-    gauge={
-        'axis': {'range': [0,100]},
-        'steps': [
-            {'range': [0,50], 'color': "red"},
-            {'range': [50,75], 'color': "orange"},
-            {'range': [75,100], 'color': "lightgreen"}
-        ]
-    }
-))
+        fig = go.Figure(go.Indicator(
+            mode="gauge+number",
+            value=score,
+            title={'text': "Quality Score"},
+            gauge={
+                'axis': {'range': [0, 100]},
+                'steps': [
+                    {'range': [0, 50], 'color': "red"},
+                    {'range': [50, 75], 'color': "orange"},
+                    {'range': [75, 100], 'color': "lightgreen"}
+                ]
+            }
+        ))
 
-st.plotly_chart(fig)
+        st.plotly_chart(fig)
 
-st.subheader("Quality Score")
-st.metric("Dataset Quality Score", score)
+        st.subheader("Quality Score")
+        st.metric("Dataset Quality Score", score)
 
-st.subheader("Issues Detected")
-st.write(issues)
+        st.subheader("Issues Detected")
+        st.write(issues)
 
-st.subheader("Missing Values Heatmap")
+        st.subheader("Missing Values Heatmap")
 
-fig, ax = plt.subplots(figsize=(8,4))
-sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
-st.pyplot(fig)
+        fig2, ax = plt.subplots(figsize=(8,4))
+        sns.heatmap(df.isnull(), cbar=False, yticklabels=False)
+        st.pyplot(fig2)
 
-recommendations = []
+        recommendations = []
 
         if issues["missing_values"]:
             recommendations.append("Handle missing values using imputation.")
@@ -102,10 +103,13 @@ recommendations = []
         if issues["duplicates"] > 0:
             recommendations.append("Remove duplicate records.")
 
-        if issues.get("age_under_18",0) > 0:
+        if issues.get("age_under_18", 0) > 0:
             recommendations.append("Check unrealistic age values.")
 
-        if issues.get("los_less_2",0) > 0:
+        if issues.get("age_over_45", 0) > 0:
+            recommendations.append("Verify age outliers.")
+
+        if issues.get("los_less_2", 0) > 0:
             recommendations.append("Verify short hospital stays.")
 
         if not recommendations:
